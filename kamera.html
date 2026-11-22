@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>iPhone 17 Pro — Camera Config</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+  :root{
+    --bg:#000;
+    --card:#1c1c1e;
+    --card2:#2c2c2e;
+    --sep:rgba(255,255,255,.08);
+    --txt:#fff;
+    --txt2:#8e8e93;
+    --accent:#ffd60a;
+    --blue:#0a84ff;
+    --green:#30d158;
+  }
+
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Roboto,sans-serif;
+    background:var(--bg);
+    color:var(--txt);
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    padding:24px 16px 60px;
+    overflow-x:hidden;
+  }
+
+  /* ambient glow */
+  body::before{
+    content:"";
+    position:fixed;
+    top:-30%; left:50%;
+    transform:translateX(-50%);
+    width:700px; height:700px;
+    background:radial-gradient(circle, rgba(255,214,10,.16), rgba(255,120,0,.06) 40%, transparent 70%);
+    pointer-events:none;
+    z-index:0;
+    animation:pulse 8s ease-in-out infinite;
+  }
+  @keyframes pulse{
+    0%,100%{opacity:.7; transform:translateX(-50%) scale(1);}
+    50%{opacity:1; transform:translateX(-50%) scale(1.15);}
+  }
+
+  .wrap{
+    width:100%;
+    max-width:480px;
+    position:relative;
+    z-index:1;
+  }
+
+  /* ===== HEADER ===== */
+  .header{
+    text-align:center;
+    margin-bottom:26px;
+    animation:fadeDown .7s ease both;
+  }
+  @keyframes fadeDown{ from{opacity:0; transform:translateY(-20px);} to{opacity:1; transform:translateY(0);} }
+
+  .logo{
+    width:64px; height:64px;
+    margin:0 auto 14px;
+    border-radius:18px;
+    background:linear-gradient(145deg,#3a3a3c,#1c1c1e);
+    display:grid; place-items:center;
+    box-shadow:0 8px 24px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.12);
+    position:relative;
+    overflow:hidden;
+  }
+  .logo::after{
+    content:"";
+    position:absolute; inset:0;
+    background:linear-gradient(135deg, transparent 40%, rgba(255,214,10,.35), transparent 60%);
+    animation:shine 4s linear infinite;
+  }
+  @keyframes shine{ from{transform:translateX(-100%);} to{transform:translateX(100%);} }
+
+  .logo svg{ width:34px; height:34px; fill:#ffd60a; position:relative; z-index:1; }
+
+  h1{
+    font-size:26px;
+    font-weight:700;
+    letter-spacing:-.5px;
+  }
+  h1 span{
+    background:linear-gradient(90deg,#ffd60a,#ff9500);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+  }
+  .sub{
+    font-size:13px;
+    color:var(--txt2);
+    margin-top:5px;
+    letter-spacing:.2px;
+  }
+
+  /* ===== LIVE PREVIEW ===== */
+  .preview{
+    position:relative;
+    aspect-ratio:4/3;
+    border-radius:22px;
+    overflow:hidden;
+    margin-bottom:20px;
+    background:
+      radial-gradient(circle at 30% 25%, rgba(255,214,10,.28), transparent 55%),
+      radial-gradient(circle at 75% 70%, rgba(10,132,255,.28), transparent 55%),
+      linear-gradient(160deg,#1a1a2e,#0f0f1a);
+    box-shadow:0 16px 44px rgba(0,0,0,.65), inset 0 0 0 1px rgba(255,255,255,.07);
+    animation:fadeUp .7s .1s ease both;
+    cursor:pointer;
+  }
+  @keyframes fadeUp{ from{opacity:0; transform:translateY(24px);} to{opacity:1; transform:translateY(0);} }
+
+  .preview::before{
+    content:"";
+    position:absolute; inset:0;
+    background-image:
+      linear-gradient(rgba(255,255,255,.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.05) 1px, transparent 1px);
+    background-size:33.33% 33.33%;
+    opacity:.6;
+  }
+
+  .focus-box{
+    position:absolute;
+    top:42%; left:50%;
+    width:74px; height:74px;
+    margin:-37px 0 0 -37px;
+    border:1.5px solid var(--accent);
+    border-radius:6px;
+    animation:focusPulse 2.2s ease-in-out infinite;
+    box-shadow:0 0 18px rgba(255,214,10,.35);
+  }
+  @keyframes focusPulse{
+    0%,100%{transform:scale(1); opacity:.9;}
+    50%{transform:scale(1.12); opacity:.5;}
+  }
+
+  .preview-hud{
+    position:absolute;
+    top:12px; left:12px; right:12px;
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    font-size:11px;
+    font-weight:600;
+    letter-spacing:.5px;
+  }
+  .hud-tag{
+    background:rgba(0,0,0,.45);
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+    padding:5px 10px;
+    border-radius:8px;
+    display:flex; align-items:center; gap:5px;
+    border:1px solid rgba(255,255,255,.1);
+  }
+  .dot{
+    width:6px; height:6px;
+    border-radius:50%;
+    background:#ff453a;
+    box-shadow:0 0 8px #ff453a;
+    animation:blink 1.4s infinite;
+  }
+  @keyframes blink{ 0%,100%{opacity:1;} 50%{opacity:.25;} }
+
+  .preview-bottom{
+    position:absolute;
+    bottom:12px; left:12px; right:12px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  .lens-pill{
+    background:rgba(0,0,0,.45);
+    backdrop-filter:blur(12px);
+    -webkit-backdrop-filter:blur(12px);
+    padding:5px 12px;
+    border-radius:20px;
+    font-size:11px;
+    font-weight:600;
+    color:var(--accent);
+    border:1px solid rgba(255,214,10,.3);
+  }
+  .histogram{
+    display:flex;
+    gap:2px;
+    align-items:flex-end;
+    height:26px;
+    background:rgba(0,0,0,.4);
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+    padding:4px 8px;
+    border-radius:10px;
+    border:1px solid rgba(255,255,255,.08);
+  }
+  .histogram i{
+    width:3px;
+    background:linear-gradient(to top,var(--accent),#ff9500);
+    border-radius:2px;
+    animation:hist 1.6s ease-in-out infinite;
+  }
+  @keyframes hist{
+    0%,100%{height:30%;}
+    50%{height:100%;}
+  }
+  .histogram i:nth-child(1){animation-delay:0s}
+  .histogram i:nth-child(2){animation-delay:.1s}
+  .histogram i:nth-child(3){animation-delay:.2s}
+  .histogram i:nth-child(4){animation-delay:.3s}
+  .histogram i:nth-child(5){animation-delay:.4s}
+  .histogram i:nth-child(6){animation-delay:.5s}
+  .histogram i:nth-child(7){animation-delay:.6s}
+  .histogram i:nth-child(8){animation-delay:.7s}
+
+  /* ===== MODE TABS ===== */
+  .modes{
+    display:flex;
+    gap:6px;
+    background:var(--card);
+    padding:5px;
+    border-radius:14px;
+    margin-bottom:18px;
+    animation:fadeUp .7s .2s ease both;
+  }
+  .mode{
+    flex:1;
+    padding:11px 0;
+    text-align:center;
+    font-size:13px;
+    font-weight:600;
+    color:var(--txt2);
+    border-radius:10px;
+    cursor:pointer;
+    transition:.3s cubic-bezier(.4,0,.2,1);
+    user-select:none;
+  }
+  .mode.active{
+    background:linear-gradient(145deg,#3a3a3c,#2c2c2e);
+    color:var(--accent);
+    box-shadow:0 4px 14px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.1);
+    transform:scale(1.02);
+  }
+  .mode:active{ transform:scale(.96); }
+
+  /* ===== SECTION ===== */
+  .section{
+    background:var(--card);
+    border-radius:16px;
+    margin-bottom:14px;
+    overflow:hidden;
+    animation:fadeUp .7s ease both;
+    box-shadow:0 4px 20px rgba(0,0,0,.35);
+  }
+  .section:nth-of-type(1){animation-delay:.25s}
+  .section:nth-of-type(2){animation-delay:.3s}
+  .section:nth-of-type(3){animation-delay:.35s}
+  .section:nth-of-type(4){animation-delay:.4s}
+  .section:nth-of-type(5){animation-delay:.45s}
+
+  .section-title{
+    font-size:11px;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    color:var(--txt2);
+    padding:16px 18px 8px;
+  }
+
+  /* ===== ROW ===== */
+  .row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:14px 18px;
+    border-top:1px solid var(--sep);
+    gap:14px;
+  }
+  .section-title + .row{ border-top:none; }
+
+  .row-label{
+    display:flex;
+    flex-direction:column;
+    gap:3px;
+    flex:1;
+    min-width:0;
+  }
+  .row-label .t{ font-size:15px; font-weight:500; letter-spacing:-.2px; }
+  .row-label .d{ font-size:12px; color:var(--txt2); line-height:1.4; }
+
+  .row .icon{
+    width:30px; height:30px;
+    border-radius:8px;
+    display:grid; place-items:center;
+    font-size:15px;
+    flex-shrink:0;
+    margin-right:12px;
+  }
+  .row-left{ display:flex; align-items:center; flex:1; min-width:0; }
+
+  /* ===== SWITCH ===== */
+  .switch{
+    position:relative;
+    width:51px; height:31px;
+    flex-shrink:0;
+    cursor:pointer;
+  }
+  .switch input{ display:none; }
+  .slider{
+    position:absolute; inset:0;
+    background:#39393d;
+    border-radius:16px;
+    transition:.32s cubic-bezier(.4,0,.2,1);
+  }
+  .slider::before{
+    content:"";
+    position:absolute;
+    width:27px; height:27px;
+    left:2px; top:2px;
+    background:#fff;
+    border-radius:50%;
+    transition:.32s cubic-bezier(.4,0,.2,1);
+    box-shadow:0 2px 6px rgba(0,0,0,.35);
+  }
+  .switch input:checked + .slider{ background:var(--green); }
+  .switch input:checked + .slider::before{ transform:translateX(20px); }
+
+  /* ===== SEGMENTED ===== */
+  .segmented{
+    display:flex;
+    gap:4px;
+    background:#000;
+    padding:3px;
+    border-radius:10px;
+    flex-shrink:0;
+  }
+  .seg{
+    padding:7px 13px;
+    font-size:12.5px;
+    font-weight:600;
+    color:var(--txt2);
+    border-radius:8px;
+    cursor:pointer;
+    transition:.25s;
+    user-select:none;
+    white-space:nowrap;
+  }
+  .seg.active{
+    background:var(--accent);
+    color:#000;
+    box-shadow:0 2px 10px rgba(255,214,10,.35);
+  }
+  .seg:active{ transform:scale(.94); }
+
+  /* ===== CHIPS ===== */
+  .chips{
+    display:flex;
+    gap:8px;
+    padding:4px 18px 16px;
+    flex-wrap:wrap;
+  }
+  .chip{
+    padding:9px 16px;
+    font-size:13px;
+    font-weight:600;
+    color:var(--txt2);
+    background:var(--card2);
+    border-radius:20px;
+    cursor:pointer;
+    transition:.25s cubic-bezier(.4,0,.2,1);
+    user-select:none;
+    border:1px solid transparent;
+  }
+  .chip.active{
+    background:rgba(255,214,10,.15);
+    color:var(--accent);
+    border-color:rgba(255,214,10,.45);
+    box-shadow:0 0 16px rgba(255,214,10,.15);
+  }
+  .chip:active{ transform:scale(.93); }
+
+  /* ===== SLIDER ROW ===== */
+  .slider-row{ padding:6px 18px 18px; }
+  .slider-head{
+    display:flex;
+    justify-content:space-between;
+    font-size:12px;
+    color:var(--txt2);
+    margin-bottom:10px;
+    font-weight:600;
+  }
+  .slider-head b{ color:var(--accent); font-weight:700; }
+
+  input[type=range]{
+    -webkit-appearance:none;
+    width:100%;
+    height:5px;
+    border-radius:3px;
+    background:linear-gradient(90deg,var(--accent) var(--p,50%), #39393d var(--p,50%));
+    outline:none;
+    cursor:pointer;
+  }
+  input[type=range]::-webkit-slider-thumb{
+    -webkit-appearance:none;
+    width:24px; height:24px;
+    border-radius:50%;
+    background:#fff;
+    box-shadow:0 2px 10px rgba(0,0,0,.5), 0 0 0 .5px rgba(255,255,255,.3);
+    cursor:grab;
+    transition:transform .15s;
+  }
+  input[type=range]::-webkit-slider-thumb:active{ transform:scale(1.18); cursor:grabbing; }
+
+  /* ===== FOOTER BTN ===== */
+  .actions{
+    display:flex;
+    gap:12px;
+    margin-top:22px;
+    animation:fadeUp .7s .5s ease both;
+  }
+  .btn{
+    flex:1;
+    padding:16px;
+    border:none;
+    border-radius:16px;
+    font-size:15px;
+    font-weight:700;
+    cursor:pointer;
+    transition:.25s cubic-bezier(.4,0,.2,1);
+    font-family:inherit;
+    letter-spacing:-.2px;
+  }
+  .btn-primary{
+    background:linear-gradient(135deg,#ffd60a,#ff9500);
+    color:#000;
+    box-shadow:0 8px 26px rgba(255,180,0,.35);
+  }
+  .btn-primary:active{ transform:scale(.97); box-shadow:0 4px 14px rgba(255,180,0,.3); }
+  .btn-ghost{
+    background:var(--card);
+    color:var(--txt);
+    flex:0 0 auto;
+    padding:16px 22px;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.09);
+  }
+  .btn-ghost:active{ transform:scale(.97); background:var(--card2); }
+
+  /* toast */
+  .toast{
+    position:fixed;
+    bottom:32px; left:50%;
+    transform:translate(-50%,120px);
+    background:rgba(48,209,88,.95);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+    color:#fff;
+    padding:13px 22px;
+    border-radius:14px;
+    font-size:14px;
+    font-weight:600;
+    box-shadow:0 10px 34px rgba(0,0,0,.5);
+    transition:transform .45s cubic-bezier(.34,1.56,.64,1);
+    z-index:99;
+    pointer-events:none;
+  }
+  .toast.show{ transform:translate(-50%,0); }
+
+  /* responsive */
+  @media(max-width:400px){
+    .row{ padding:13px 14px; }
+    .chips{ padding:4px 14px 14px; }
+    .section-title{ padding:14px 14px 8px; }
+    h1{ font-size:22px; }
+    .seg{ padding:6px 10px; font-size:12px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo">
+      <svg viewBox="0 0 24 24"><path d="M9 3 7.17 5H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-3.17L15 3H9zm3 15a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-2a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+    </div>
+    <h1>iPhone 17 <span>Pro Camera</span></h1>
+    <div class="sub">Konfigurasi Sistem Kamera • ProRAW Engine</div>
+  </div>
+
+  <!-- LIVE PREVIEW -->
+  <div class="preview" id="preview">
+    <div class="preview-hud">
+      <div class="hud-tag"><span class="dot"></span> LIVE</div>
+      <div class="hud-tag" id="hudRes">48MP • RAW</div>
+    </div>
+    <div class="focus-box" id="focusBox"></div>
+    <div class="preview-bottom">
+      <div class="lens-pill" id="lensPill">1× Main</div>
+      <div class="histogram">
+        <i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODES -->
+  <div class="modes" id="modes">
+    <div class="mode active" data-mode="photo">Photo</div>
+    <div class="mode" data-mode="video">Video</div>
+    <div class="mode" data-mode="slo">Slo‑mo</div>
+    <div class="mode" data-mode="pro">Pro</div>
+  </div>
+
+  <!-- LENS -->
+  <div class="section">
+    <div class="section-title">Lensa</div>
+    <div class="chips" id="lensChips">
+      <div class="chip" data-lens="0.5× Ultra Wide">0.5×</div>
+      <div class="chip active" data-lens="1× Main">1×</div>
+      <div class="chip" data-lens="2× Tele">2×</div>
+      <div class="chip" data-lens="4× Tele">4×</div>
+      <div class="chip" data-lens="8× Tele">8×</div>
+    </div>
+  </div>
+
+  <!-- RESOLUTION & FORMAT -->
+  <div class="section">
+    <div class="section-title">Resolusi & Format</div>
+
+    <div class="row">
+      <div class="row-left">
+        <div class="icon" style="background:rgba(255,214,10,.15)">📐</div>
+        <div class="row-label">
+          <div class="t">Resolusi Foto</div>
+          <div class="d" id="resDesc">48MP ProRAW Max</div>
+        </div>
+      </div>
+      <div class="segmented" id="resSeg">
+        <div class="seg" data-res="12">12</div>
+        <div class="seg" data-res="24">24</div>
+        <div class="seg" data-res="48">48</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="row-left">
+        <div class="icon" style="background:rgba(10,132,255,.15)">🖼️</div>
+        <div class="row-label">
+          <div class="t">Format File</div>
+          <div class="d">Kompresi & kompatibilitas</div>
+        </div>
+      </div>
+      <div class="segmented" id="fmtSeg">
+        <div class="seg active" data-fmt="HEIF">HEIF</div>
+        <div class="seg" data-fmt="JPEG">JPEG</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="row-left">
+        <div class="icon" style="background:rgba(48,209,88,.15)">⚡</div>
+        <div class="row-label">
+          <div class="t">ProRAW & Resolution Control</div>
+          <div class="d">Aktifkan ProRAW 48MP</div>
+        </div>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="proRaw" checked>
+        <span class="slider"></span>
+      </label>
+    </div>
+  </div>
+
+  <!-- VIDEO -->
+  <div class="section">
+    <div class="section-title">Video</div>
+
+    <div class="row">
+      <div class="row-left">
+        <div class="icon" style="background:rgba(255,69,58,.15)">🎬</div>
+        <div class="row-label">
+          <div class="t">Frame Rate</div>
+          <div class="d" id="fpsDesc">60 fps • 4K ProRes</div>
+        </div>
+      </div>
+      <div class="segmented" id="fpsSeg">
+        <div class="seg" data-fps="24">24</div>
+        <div class="seg" data-fps="30">30</div>
+        <div class="seg active" data-fps="60">60</div>
+        <div class="seg" data-fps="120">120</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="row-left">
+        <div class="icon" style="background:rgba(191,90,242,.15)">🎞️</div>
+        <div class="row-label">
+          <div class="t">Codec Video</div>
+          <div class="d">ProRes 422 HQ</div>
+        </div>
+      </div>
+      <div class="segmented" id="codecSeg">
+        <div class="seg active" data-codec="HEVC">HEVC</div>
+        <div class="seg" data-codec="H.264">H.264</div>
+        <div class="seg" data-codec="ProRes">ProRes</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="row-left">
+        <div class="icon" style="background:rgba(255,159,10,.15)">🌊</div>
+        <div class="row-label">
+          <div class="t">Action Mode</div>
+          <div class="d">Stabilisasi ekstrem 4K</div>
+        </div>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="actionMode">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="row">
+      <div class="row-left">
+        <div class="icon" style="background:rgba(90,200,250,.15)">🎭</div>
+        <div class="row-label">
+          <div class="t">Cinematic Mode</div>
+          <div class="d">Depth of field sinematik</div>
+        </div>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="cinematic" checked>
+        <span class="slider"></span>
+      </label>
+    </div>
+  </div>
+
+  <!-- ENHANCEMENT -->
+  <div class="section">
+    <div class="section-title">Peningkatan Gambar</div>
+
+    <div class="row">
+      <div class="row-left">
+        <div class="icon" style="background:rgba(255,214,10,.15)">✨</div>
+        <div class="row-label">
+          <div class="t">Smart HDR 5</div>
+          <div class="d">Rentang dinamis adaptif</div>
+        </div>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="hdr" checked>
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="row">
+      <div class="row-left">
+        <div class="icon" style="background:rgba(48,209,88,.15)">🌙</div>
+        <div class="row-label">
+          <div class="t">Night Mode</div>
+          <div class="d">Foto low‑light otomatis</div>
+        </div>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="night" checked>
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="row">
+      <div class="row-left">
+        <div class="icon" style="background:rgba(191,90,242,.15)">🔬</div>
+        <div class="row-label">
+          <div class="t">Macro Control</div>
+          <div class="d">Fokus ultra dekat</div>
+        </div>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="macro">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <div class="row">
+      <div class="row-left">
+        <div class="icon" style="background:rgba(10,132,255,.15)">🧭</div>
+        <div class="row-label">
+          <div class="t">Level & Grid</div>
+          <div class="d">Bantuan komposisi</div>
+        </div>
+      </div>
+      <label class="switch">
+        <input type="checkbox" id="grid" checked>
+        <span class="slider"></span>
+      </label>
+    </div>
+  </div>
+
+  <!-- MANUAL -->
+  <div class="section">
+    <div class="section-title">Kontrol Manual</div>
+
+    <div class="slider-row">
+      <div class="slider-head"><span>ISO</span><b id="isoVal">100</b></div>
+      <input type="range" id="iso" min="25" max="6400" value="100" step="25">
+    </div>
+
+    <div class="slider-row">
+      <div class="slider-head"><span>Shutter Speed</span><b id="shutVal">1/250s</b></div>
+      <input type="range" id="shutter" min="0" max="10" value="5" step="1">
+    </div>
+
+    <div class="slider-row">
+      <div class="slider-head"><span>Exposure</span><b id="expVal">0.0 EV</b></div>
+      <input type="range" id="exposure" min="-20" max="20" value="0" step="1">
+    </div>
+
+    <div class="slider-row">
+      <div class="slider-head"><span>White Balance</span><b id="wbVal">5200 K</b></div>
+      <input type="range" id="wb" min="2500" max="9000" value="5200" step="100">
+    </div>
+  </div>
+
+  <!-- ACTIONS -->
+  <div class="actions">
+    <button class="btn btn-ghost" id="resetBtn">Reset</button>
+    <button class="btn btn-primary" id="saveBtn">Simpan Konfigurasi</button>
+  </div>
+
+</div>
+
+<div class="toast" id="toast">✓ Konfigurasi disimpan</div>
+
+<script>
+/* =================== STATE =================== */
+const state = {
+  mode: 'photo',
+  lens: '1× Main',
+  res: 48,
+  fmt: 'HEIF',
+  proRaw: true,
+  fps: 60,
+  codec: 'ProRes',
+  actionMode: false,
+  cinematic: true,
+  hdr: true,
+  night: true,
+  macro: false,
+  grid: true,
+  iso: 100,
+  shutter: 5,
+  exposure: 0,
+  wb: 5200
+};
+
+const $ = id => document.getElementById(id);
+const toast = $('toast');
+
+function showToast(msg){
+  toast.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(toast._t);
+  toast._t = setTimeout(()=>toast.classList.remove('show'), 2200);
+}
+
+/* =================== HELPERS =================== */
+function updateRangeFill(el){
+  const p = ((el.value - el.min) / (el.max - el.min)) * 100;
+  el.style.setProperty('--p', p + '%');
+}
+
+function updateHUD(){
+  $('hudRes').textContent = state.res + 'MP • ' + (state.proRaw ? 'RAW' : state.fmt);
+  $('lensPill').textContent = state.lens;
+  $('resDesc').textContent = state.res + 'MP ' + (state.proRaw ? 'ProRAW Max' : state.fmt);
+  $('fpsDesc').textContent = state.fps + ' fps • ' + state.codec;
+  $('isoVal').textContent = state.iso;
+  $('expVal').textContent = (state.exposure > 0 ? '+' : '') + (state.exposure/10).toFixed(1) + ' EV';
+  $('wbVal').textContent = state.wb + ' K';
+
+  const shutters = ['1/1000s','1/500s','1/250s','1/125s','1/60s','1/30s','1/15s','1/8s','1/4s','1/2s','1s'];
+  $('shutVal').textContent = shutters[state.shutter];
+}
+
+/* =================== MODES =================== */
+document.querySelectorAll('#modes .mode').forEach(el=>{
+  el.addEventListener('click', ()=>{
+    document.querySelectorAll('#modes .mode').forEach(m=>m.classList.remove('active'));
+    el.classList.add('active');
+    state.mode = el.dataset.mode;
+    showToast('Mode: ' + el.textContent);
+  });
+});
+
+/* =================== LENS =================== */
+document.querySelectorAll('#lensChips .chip').forEach(el=>{
+  el.addEventListener('click', ()=>{
+    document.querySelectorAll('#lensChips .chip').forEach(c=>c.classList.remove('active'));
+    el.classList.add('active');
+    state.lens = el.dataset.lens;
+    updateHUD();
+    showToast('Lensa: ' + el.dataset.lens);
+  });
+});
+
+/* =================== SEGMENTED =================== */
+function bindSeg(containerId, key, cast, cb){
+  document.querySelectorAll('#'+containerId+' .seg').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      document.querySelectorAll('#'+containerId+' .seg').forEach(s=>s.classList.remove('active'));
+      el.classList.add('active');
+      state[key] = cast(el.dataset[key]);
+      updateHUD();
+      if(cb) cb(state[key]);
+      showToast(key.toUpperCase() + ': ' + state[key]);
+    });
+  });
+}
+bindSeg('resSeg','res',Number);
+bindSeg('fmtSeg','fmt',String);
+bindSeg('fpsSeg','fps',Number);
+bindSeg('codecSeg','codec',String);
+
+/* =================== SWITCHES =================== */
+[['proRaw','proRaw'],['actionMode','actionMode'],['cinematic','cinematic'],
+ ['hdr','hdr'],['night','night'],['macro','macro'],['grid','grid']].forEach(([id,key])=>{
+  const el = $(id);
+  if(!el) return;
+  el.checked = state[key];
+  el.addEventListener('change', ()=>{
+    state[key] = el.checked;
+    updateHUD();
+    showToast((el.checked ? '✓ ' : '✕ ') + key);
+  });
+});
+
+/* =================== SLIDERS =================== */
+const sliders = [
+  { id:'iso',      key:'iso',      fmt:v=>v },
+  { id:'shutter',  key:'shutter',  fmt:v=>v },
+  { id:'exposure', key:'exposure', fmt:v=>v },
+  { id:'wb',       key:'wb',       fmt:v=>v }
+];
+
+sliders.forEach(s=>{
+  const el = $(s.id);
+  el.value = state[s.key];
+  updateRangeFill(el);
+  el.addEventListener('input', ()=>{
+    state[s.key] = Number(el.value);
+    updateRangeFill(el);
+    updateHUD();
+  });
+});
+
+/* =================== PREVIEW TAP =================== */
+$('preview').addEventListener('click', e=>{
+  const box = $('focusBox');
+  const rect = e.currentTarget.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const y = e.clientY - rect.top;
+  box.style.left = x + 'px';
+  box.style.top = y + 'px';
+  box.style.animation = 'none';
+  void box.offsetWidth;
+  box.style.animation = 'focusPulse 2.2s ease-in-out infinite';
+  showToast('Fokus dikunci');
+});
+
+/* =================== RESET =================== */
+$('resetBtn').addEventListener('click', ()=>{
+  location.reload();
+});
+
+/* =================== SAVE =================== */
+$('saveBtn').addEventListener('click', ()=>{
+  const payload = JSON.stringify(state, null, 2);
+  console.log('Camera Config:', payload);
+
+  // reset visuals
+  document.querySelectorAll('#modes .mode').forEach(m=>m.classList.remove('active'));
+  document.querySelector('#modes .mode[data-mode="photo"]').classList.add('active');
+
+  document.querySelectorAll('#lensChips .chip').forEach(c=>c.classList.remove('active'));
+  document.querySelector('#lensChips .chip[data-lens="1× Main"]').classList.add('active');
+
+  document.querySelectorAll('#resSeg .seg').forEach(s=>s.classList.remove('active'));
+  document.querySelector('#resSeg .seg[data-res="48"]').classList.add('active');
+
+  document.querySelectorAll('#fmtSeg .seg').forEach(s=>s.classList.remove('active'));
+  document.querySelector('#fmtSeg .seg[data-fmt="HEIF"]').classList.add('active');
+
+  document.querySelectorAll('#fpsSeg .seg').forEach(s=>s.classList.remove('active'));
+  document.querySelector('#fpsSeg .seg[data-fps="60"]').classList.add('active');
+
+  document.querySelectorAll('#codecSeg .seg').forEach(s=>s.classList.remove('active'));
+  document.querySelector('#codecSeg .seg[data-codec="ProRes"]').classList.add('active');
+
+  $('proRaw').checked = true;   state.proRaw = true;
+  $('hdr').checked = true;      state.hdr = true;
+  $('night').checked = true;    state.night = true;
+  $('grid').checked = true;     state.grid = true;
+  $('macro').checked = false;   state.macro = false;
+  $('actionMode').checked = false; state.actionMode = false;
+  $('cinematic').checked = true;   state.cinematic = true;
+
+  state.mode='photo'; state.lens='1× Main'; state.res=48; state.fmt='HEIF';
+  state.fps=60; state.codec='ProRes';
+  state.iso=100; state.shutter=5; state.exposure=0; state.wb=5200;
+
+  ['iso','shutter','exposure','wb'].forEach(id=>{
+    const el = $(id);
+    el.value = state[id];
+    updateRangeFill(el);
+  });
+
+  updateHUD();
+  showToast('✓ Konfigurasi disimpan');
+});
+
+/* =================== INIT =================== */
+['iso','shutter','exposure','wb'].forEach(id=>updateRangeFill($(id)));
+updateHUD();
+</script>
+
+</body>
+</html>
